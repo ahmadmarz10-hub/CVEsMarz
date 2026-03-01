@@ -1,47 +1,159 @@
-1. Executive Summary
-I have identified a Stored Cross-Site Scripting (XSS) vulnerability in the Tecnick TCExam v16.5.0 application (specifically tested on the demo environment). This vulnerability allows an attacker to inject malicious JavaScript payloads into the "Group Management" form. When an administrator or another user views the created Group Management, the script executes automatically in their browser.
+[Stored-XSS] in Tecnick TCExam v16.5.0
 
-Tecnick TCExam v16.5.0 
+BUG Author: Ahmad Marzouk
+Product Information:
+Vendor Homepage: https://www.tecnick.com/
 
-last update v16.5.0
+Software Tested: https://demos2.softaculous.com/TCExamsu2xliu1gr/admin/code/index.php
 
-2. Vulnerability Details
+Affected Version: v16.5.0 (latest at time of testing)
+
+Executive Summary
+
+A Stored Cross-Site Scripting (XSS) vulnerability has been identified in Tecnick TCExam v16.5.0, specifically within the Group Management functionality. The flaw allows an attacker to inject persistent malicious JavaScript payloads into the Name parameter when creating a new group.
+
+Once stored, the payload is executed automatically whenever an administrator or any user with group-viewing permissions accesses the affected pages, leading to complete takeover of the victim’s browser session.
+
+Vulnerability Details
+
 Vulnerability Type: Stored Cross-Site Scripting (XSS)
+Severity Level: CRITICAL (CVSS: 9.0)
+Vulnerable Endpoints:
 
-Vulnerable Endpoints: fisrt add new group in name paramter inject the payload https://demos2.softaculous.com/TCExamplvdftmhcf/admin/code/tce_edit_group.php
+https://demos2.softaculous.com/TCExamplvdftmhcf/admin/code/tce_edit_group.php
+
 https://demos2.softaculous.com/TCExamplvdftmhcf/admin/code/tce_select_users.php
 
-Vulnerable Parameter: in Name 
+Vulnerable Parameter:
 
-Vector: HTML Injection via details tag event handler.
+Name field in Add New Group
 
-3. Technical Description
-The application fails to properly sanitize or encode user input submitted to the order creation form. By injecting a specific HTML5 payload, I was able to trigger arbitrary JavaScript execution.
+Vector:
 
-I utilized the details HTML element with the open attribute and the ontoggle event handler. This vector is particularly effective because it does not require user interaction (like clicking a button) to trigger; the browser attempts to render the "open" state immediately upon loading the page, firing the event.
+HTML Injection using <details> element with the ontoggle event handler.
 
-Payload Used:
+Root Cause
 
-HTML
+The application fails to:
+
+Sanitize user-supplied input in the Name parameter
+
+Encode user content before rendering it back into the DOM
+
+Restrict HTML5 event attributes
+This results in stored executable JavaScript within administrative views.
+
+Technical Description
+
+By injecting a crafted HTML payload into the Name field while creating a new group, it is possible to trigger JavaScript execution when the admin later loads the group listing or selection page.
+
+The payload abuses:
+
+The <details> HTML5 tag
+
+The open attribute
+
+The ontoggle event
+
+This combination triggers without user interaction, making it a highly reliable stored-XSS vector.
+
+Payload Used
+<details/open/ontoggle=prompt(origin)>
+
+This payload:
+
+Auto-expands due to the open attribute
+
+Fires ontoggle immediately during page rendering
+
+Executes JavaScript as soon as the page loads
+
+Steps to Reproduce
+1. Log in as a user with permission to create groups (Admin-level or similar).
+2. Navigate to the Group Management page:
+https://demos2.softaculous.com/TCExamplvdftmhcf/admin/code/tce_edit_group.php
+3. Create a new group
+
+In the Name field, insert the payload:
 
 <details/open/ontoggle=prompt(origin)>
 
-4. Steps to Reproduce
-Log in to the application as a user with permissions to create orders. (admin user) 
+Submit the form.
 
-Navigate to the order creation page: https://demos2.softaculous.com/TCExamplvdftmhcf/admin/code/tce_select_users.php
+4. Log in as an Administrator or navigate to:
+https://demos2.softaculous.com/TCExamplvdftmhcf/admin/code/tce_select_users.php
+5. View the newly created group
+Observation:
 
-In the Client Note field, input the following payload:
+A JavaScript prompt appears displaying the page origin, confirming stored-XSS execution.
 
-HTML
+Impact
 
-<details/open/ontoggle=prompt(origin)>
-Submit the form to create the order.
+Full account compromise
 
-Log in as an Administrator (or access the "User Selection" page).
+Session hijacking
 
-Navigate to the newly click XML.
+CSRF token theft
 
-Observation: A prompt box appears displaying the page origin
+Privilege escalation
+
+Admin takeover
+
+Forced actions on behalf of the victim
+
+Data leakage or manipulation
+
+Phishing or social engineering attacks inside the application
+
+Stored XSS is highly dangerous because the malicious script persists in the system.
+
+Suggested Remediation
+Immediate
+
+Apply server-side HTML escaping on all output.
+
+Block dangerous tags and event handlers.
+
+Use htmlspecialchars() or equivalent in PHP.
+
+Short-Term
+
+Implement strict input validation:
+
+Reject <, >, ", ', and event attributes.
+
+Use allowlists.
+
+Long-Term
+
+Adopt a templating engine or a modern framework with built-in XSS protection.
+
+Implement a Content Security Policy (CSP).
+
+Sanitize using libraries such as:
+
+HTML Purifier
+
+OWASP Java HTML Sanitizer
+
+Security Recommendations
+
+Enable Content Security Policy (CSP)
+
+Apply the principle of least privilege
+
+Perform regular code reviews and security scanning
+
+Implement a Web Application Firewall (WAF)
+
+Ensure proper logging and monitoring of admin actions
+
+References
+
+OWASP XSS Prevention Cheat Sheet
+
+CWE-79: Improper Neutralization of Input (Cross-Site Scripting)
+
+CERT Secure Coding Standards
 
 https://github.com/user-attachments/assets/277cbe7b-8e7a-4da0-a3e0-70fad5da5c36
