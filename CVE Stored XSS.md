@@ -30,7 +30,7 @@ Name field in Add New Group
 
 Vector:
 
-HTML Injection using <details> element with the ontoggle event handler.
+HTML Injection using details element with the ontoggle event handler.
 
 Root Cause
 
@@ -49,7 +49,7 @@ By injecting a crafted HTML payload into the Name field while creating a new gro
 
 The payload abuses:
 
-The <details> HTML5 tag
+The details HTML5 tag
 
 The open attribute
 
