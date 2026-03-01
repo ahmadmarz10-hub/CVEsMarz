@@ -1,0 +1,47 @@
+1. Executive Summary
+I have identified a Stored Cross-Site Scripting (XSS) vulnerability in the Tecnick TCExam v16.5.0 application (specifically tested on the demo environment). This vulnerability allows an attacker to inject malicious JavaScript payloads into the "Group Management" form. When an administrator or another user views the created Group Management, the script executes automatically in their browser.
+
+Tecnick TCExam v16.5.0 
+
+last update v16.5.0
+
+2. Vulnerability Details
+Vulnerability Type: Stored Cross-Site Scripting (XSS)
+
+Vulnerable Endpoints: fisrt add new group in name paramter inject the payload https://demos2.softaculous.com/TCExamplvdftmhcf/admin/code/tce_edit_group.php
+https://demos2.softaculous.com/TCExamplvdftmhcf/admin/code/tce_select_users.php
+
+Vulnerable Parameter: in Name 
+
+Vector: HTML Injection via details tag event handler.
+
+3. Technical Description
+The application fails to properly sanitize or encode user input submitted to the order creation form. By injecting a specific HTML5 payload, I was able to trigger arbitrary JavaScript execution.
+
+I utilized the details HTML element with the open attribute and the ontoggle event handler. This vector is particularly effective because it does not require user interaction (like clicking a button) to trigger; the browser attempts to render the "open" state immediately upon loading the page, firing the event.
+
+Payload Used:
+
+HTML
+
+<details/open/ontoggle=prompt(origin)>
+
+4. Steps to Reproduce
+Log in to the application as a user with permissions to create orders. (admin user) 
+
+Navigate to the order creation page: https://demos2.softaculous.com/TCExamplvdftmhcf/admin/code/tce_select_users.php
+
+In the Client Note field, input the following payload:
+
+HTML
+
+<details/open/ontoggle=prompt(origin)>
+Submit the form to create the order.
+
+Log in as an Administrator (or access the "User Selection" page).
+
+Navigate to the newly click XML.
+
+Observation: A prompt box appears displaying the page origin
+
+https://github.com/user-attachments/assets/277cbe7b-8e7a-4da0-a3e0-70fad5da5c36
