@@ -158,6 +158,6 @@ Ban or sanitize:
 
 All HTML with event handlers
 
-
+.
 This PoC Video 
 https://github.com/user-attachments/assets/f59c1594-7496-4ded-87c7-c5cc9755e454
