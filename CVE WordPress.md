@@ -156,16 +156,8 @@ base-uri 'none';
 4. Block Unsafe HTML Tags
 Ban or sanitize:
 
-
-<details>
-
-<svg>
-
-<math>
-
-<iframe>
-
 All HTML with event handlers
 
 
 This PoC Video 
+https://github.com/user-attachments/assets/f59c1594-7496-4ded-87c7-c5cc9755e454
