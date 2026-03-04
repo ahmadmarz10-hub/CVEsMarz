@@ -1,96 +1,152 @@
-Stored Cross-Site Scripting (XSS) in Permalink Manager WordPress Plugin
-
-Product: Permalink Manager (WordPress Plugin)
-Vendor: Permalink Manager Developers (Maciej Bis)
-Version: 2.5.3.1
-Affected Component: URI Editor / Post Title Rendering
-Vulnerability Type: Stored Cross-Site Scripting (XSS)
-CWE: CWE-79 — Improper Neutralization of Input During Web Page Generation
-Severity: High
-Attack Type: Authenticated (Admin / Editor)
-Impact: Arbitrary JavaScript execution in administrator browser
-
+Stored Cross-Site Scripting (XSS) in Permalink Manager Plugin ≤ 2.5.3.1
 Summary
 
-A Stored Cross-Site Scripting (XSS) vulnerability was discovered in the Permalink Manager WordPress plugin.
-The vulnerability occurs when user-supplied input placed in the post title > Edit > Rename > name paramter > inject the payload > save > back to dashboard > click view > the payload working!! field is not properly sanitized before being stored and later rendered in administrative pages.
+A Stored Cross-Site Scripting (XSS) vulnerability exists in the WordPress plugin Permalink Manager ≤ 2.5.3.1.
+The vulnerability occurs due to insufficient sanitization and escaping of user-controlled input in post titles or custom permalinks, which are later rendered in the URI Editor interface within the WordPress admin panel.
 
-An attacker can inject a malicious HTML payload into the post name. The payload is stored in the database and later executed when viewed in certain administrative interfaces such as the Permalink Manager URI Editor.
+An attacker with Contributor or Author privileges can inject malicious JavaScript payloads that will execute when an administrator visits the Permalink Manager URI Editor page.
 
+This may lead to administrator session hijacking, privilege escalation, and full WordPress site compromise.
+
+Vulnerability Details
+Affected Component
+
+Plugin: Permalink Manager
+Affected Version: ≤ 2.5.3.1
+
+Affected Page:
+
+/wp-admin/tools.php?page=permalink-manager
+
+Feature:
+
+URI Editor
 Vulnerability Type
 
 Stored Cross-Site Scripting (Stored XSS)
 
+OWASP Category:
+
+A03:2021 – Injection
+
+CWE:
+
+CWE-79 Improper Neutralization of Input During Web Page Generation
+Root Cause
+
+User-supplied input (post title, slug, or custom permalink) is stored in the database and later rendered inside the URI Editor interface without proper escaping.
+
+The plugin outputs user-controlled values directly into the HTML page.
+
+Example vulnerable pattern:
+
+echo $post_title;
+
+Secure implementation should use proper escaping:
+
+echo esc_html($post_title);
+
+or
+
+echo esc_attr($post_title);
+
+Because escaping is missing, injected JavaScript executes when the page loads.
+
+Attack Scenario
+
+An attacker obtains Contributor or Author access to the WordPress site.
+
+The attacker creates or edits a post.
+
+The attacker injects a malicious payload in the post title or permalink field.
+
+The payload is saved in the database.
+
+When an administrator opens the Permalink Manager URI Editor, the malicious script executes in the admin's browser.
+
 Proof of Concept (PoC)
-Payload
-details/open/ontoggle=prompt(origin)
-Steps to Reproduce
+Step 1 — Login as Contributor
 
-Log in to the WordPress admin panel.
+Login to the WordPress dashboard with Contributor privileges.
 
-Navigate to an existing Permalink Manager posttitle editing:
+Step 2 — Create or Edit a Post
 
-/wp-admin/post.php?post=1&action=edit
+Navigate to:
 
-Update the post title > rename > name > with the following payload:
+Posts → Add New
+Step 3 — Inject Payload
+
+Insert the following payload in the Post Title:
 
 <details/open/ontoggle=prompt(origin)>
 
-Save or update the post.
+Save or publish the post.
 
-Navigate to the Permalink Manager URI Editor page:
+Step 4 — Trigger the Vulnerability
 
-/wp-admin/tools.php?page=permalink-manager&section=uri_editor&orderby=post_title&order=asc
- Click View > the payload is working !!
- 
-Example test environment:
+Navigate to:
 
-https://demos2.softaculous.com/WordPress3kq2dw6c6e/wp-admin/tools.php?page=permalink-manager&section=uri_editor&orderby=post_title&order=asc
+Tools → Permalink Manager → URI Editor
 
-Locate the modified post entry.
+or directly visit:
 
-When the stored value is rendered, interacting with the injected < details > element triggers JavaScript execution.
-
+/wp-admin/tools.php?page=permalink-manager
 Result
 
-The injected payload executes JavaScript in the administrator's browser:
+The malicious JavaScript payload executes in the administrator's browser.
 
-prompt(origin)
-
-This confirms a Stored XSS vulnerability, as the payload persists in the database and executes whenever the affected page loads or the element is interacted with.
-
-Affected Locations
-
-Payload is rendered in the following admin pages:
-
-/wp-admin/tools.php?page=permalink-manager&section=uri_editor
-/wp-admin/post.php?post=1&action=edit
 Impact
 
-An attacker with privileges to create or modify posts could exploit this vulnerability to:
+This vulnerability allows attackers to execute arbitrary JavaScript within the administrator’s session.
 
-Execute arbitrary JavaScript in an administrator's browser
+Possible impacts include:
 
-Perform administrative actions via CSRF
+• Admin session hijacking
+• Creation of new administrator accounts
+• Installation of malicious plugins
+• Uploading backdoors
+• Complete WordPress site takeover
 
-Steal authentication cookies or nonces
+Because the script executes in the admin context, the impact is high severity.
 
-Inject malicious content into the WordPress dashboard
+CVSS v3.1 Score (Estimated)
+CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:C/C:H/I:H/A:L
 
-Because the payload is stored, it will execute whenever the affected page is viewed.
+Score:
 
-Recommendation
+8.8 – High
+Recommended Fix
 
-Developers should properly sanitize and escape user input before storing or displaying it.
+All user-controlled output should be escaped before rendering.
 
-Suggested protections include:
+Example fix:
+
+echo esc_html($post_title);
+
+or
+
+echo esc_attr($permalink);
+
+Additionally:
+
+• Sanitize input when saving data
+• Escape output when rendering data
+
+Recommended WordPress functions:
 
 sanitize_text_field()
-
-wp_kses()
-
 esc_html()
+esc_attr()
+esc_url()
+References
 
+OWASP XSS Prevention:
+
+https://owasp.org/www-community/attacks/xss/
+
+WordPress Escaping Documentation:
+
+https://developer.wordpress.org/apis/security/escaping/
 esc_attr()
 
 Ensuring output escaping in the URI Editor interface would prevent malicious HTML from being executed.
