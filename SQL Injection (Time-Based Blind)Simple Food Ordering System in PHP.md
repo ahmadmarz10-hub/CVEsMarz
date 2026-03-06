@@ -11,7 +11,6 @@ CWE: CWE-89 – Improper Neutralization of Special Elements used in an SQL Comma
 Severity: High
 
 Description
-
 A Time-Based Blind SQL Injection vulnerability exists in the Simple Food Ordering System in PHP 1.0 due to insufficient input validation in the status parameter of the all-tickets.php endpoint.
 
 The application fails to properly sanitize user-supplied input before incorporating it into SQL queries. Because of this, an attacker can inject malicious SQL statements into the status parameter. By using time-delay functions such as SLEEP(), attackers can confirm the presence of SQL injection and interact with the database in a blind manner.
