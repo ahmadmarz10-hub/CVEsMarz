@@ -1,38 +1,42 @@
-[Stored-XSS] in Tecnick TCExam v16.5.0
+## [Stored-XSS] in Tecnick TCExam v16.5.0
 
-BUG Author: Ahmad Marzouk
-Product Information:
-Vendor Homepage: https://www.tecnick.com/
+## BUG Author:
+Ahmad Marzouk
+## Product Information:
+## Vendor Homepage:
+https://www.tecnick.com/
 
-Software Tested: https://demos2.softaculous.com/TCExamsu2xliu1gr/admin/code/index.php
+## Software Tested:
+https://demos2.softaculous.com/TCExamsu2xliu1gr/admin/code/index.php
 
-Affected Version: v16.5.0 (latest at time of testing)
+## Affected Version: 
+v16.5.0 (latest at time of testing)
 
-Executive Summary
+## Executive Summary
 
 A Stored Cross-Site Scripting (XSS) vulnerability has been identified in Tecnick TCExam v16.5.0, specifically within the Group Management functionality. The flaw allows an attacker to inject persistent malicious JavaScript payloads into the Name parameter when creating a new group.
 
 Once stored, the payload is executed automatically whenever an administrator or any user with group-viewing permissions accesses the affected pages, leading to complete takeover of the victim’s browser session.
 
-Vulnerability Details
+## Vulnerability Details
 
 Vulnerability Type: Stored Cross-Site Scripting (XSS)
 Severity Level: CRITICAL (CVSS: 9.0)
-Vulnerable Endpoints:
+## Vulnerable Endpoints:
 
 https://demos2.softaculous.com/TCExamplvdftmhcf/admin/code/tce_edit_group.php
 
 https://demos2.softaculous.com/TCExamplvdftmhcf/admin/code/tce_select_users.php
 
-Vulnerable Parameter:
+## Vulnerable Parameter:
 
 Name field in Add New Group
 
-Vector:
+## Vector:
 
 HTML Injection using details element with the ontoggle event handler.
 
-Root Cause
+## Root Cause
 
 The application fails to:
 
@@ -43,7 +47,7 @@ Encode user content before rendering it back into the DOM
 Restrict HTML5 event attributes
 This results in stored executable JavaScript within administrative views.
 
-Technical Description
+## Technical Description
 
 By injecting a crafted HTML payload into the Name field while creating a new group, it is possible to trigger JavaScript execution when the admin later loads the group listing or selection page.
 
@@ -68,7 +72,7 @@ Fires ontoggle immediately during page rendering
 
 Executes JavaScript as soon as the page loads
 
-Steps to Reproduce
+## Steps to Reproduce
 1. Log in as a user with permission to create groups (Admin-level or similar).
 2. Navigate to the Group Management page:
 https://demos2.softaculous.com/TCExamplvdftmhcf/admin/code/tce_edit_group.php
@@ -83,7 +87,7 @@ Submit the form.
 4. Log in as an Administrator or navigate to:
 https://demos2.softaculous.com/TCExamplvdftmhcf/admin/code/tce_select_users.php
 5. View the newly created group
-Observation:
+## Observation:
 
 A JavaScript prompt appears displaying the page origin, confirming stored-XSS execution.
 
@@ -107,7 +111,7 @@ Phishing or social engineering attacks inside the application
 
 Stored XSS is highly dangerous because the malicious script persists in the system.
 
-Suggested Remediation
+## Suggested Remediation
 Immediate
 
 Apply server-side HTML escaping on all output.
@@ -148,7 +152,7 @@ Implement a Web Application Firewall (WAF)
 
 Ensure proper logging and monitoring of admin actions
 
-References
+## References
 
 OWASP XSS Prevention Cheat Sheet
 
