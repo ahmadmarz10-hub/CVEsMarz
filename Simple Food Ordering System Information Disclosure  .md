@@ -1,16 +1,21 @@
 Vulnerability Report CVE
 
-Product: Simple Food Ordering System in PHP
-Vendor: Code-Projects
-Affected Version: 1.0
-Vendor URL: https://code-projects.org/simple-food-order-system-in-php-with-source-code/
+## Product: 
+Simple Food Ordering System in PHP
+## Vendor:
+Code-Projects
+## Affected Version: 
+1.0
+## Vendor URL: 
+https://code-projects.org/simple-food-order-system-in-php-with-source-code/
 
-Vulnerability Type: Sensitive Information Disclosure / Exposed Database Backup
+## Vulnerability Type:
+Sensitive Information Disclosure / Exposed Database Backup
 CWE: CWE-200 (Exposure of Sensitive Information)
 OWASP Category: Security Misconfiguration
 Severity: High
 
-1. Vulnerability Overview
+## 1. Vulnerability Overview
 
 The Simple Food Ordering System in PHP 1.0 exposes a database backup file (food.sql) within a publicly accessible directory.
 
@@ -22,7 +27,7 @@ Because the SQL file is stored inside the web root directory and lacks proper ac
 
 This results in sensitive database information disclosure, including the full database schema and stored data.
 
-2. Affected Product
+## 2. Affected Product
 
 Product: Simple Food Ordering System
 Vendor: Code-Projects
@@ -30,7 +35,7 @@ Affected Version: 1.0
 
 The application is a PHP-based food ordering system that includes an admin panel for managing orders, products, and categories.
 
-3. Vulnerability Details
+## 3. Vulnerability Details
 Exposed SQL Database Backup
 
 A database dump file (food.sql) is stored in the following directory:
@@ -49,7 +54,7 @@ No access restrictions for .sql files
 
 Improper server configuration
 
-4. Proof of Concept
+## 4. Proof of Concept
 
 Deploy the application.
 
@@ -75,7 +80,7 @@ INSERT INTO `users` (`id`, `role`, `name`, `username`, `password`, `email`, `add
 
 An attacker can extract database contents including administrative credentials.
 
-5. Impact
+## 5. Impact
 
 Successful exploitation allows attackers to obtain sensitive information such as:
 
@@ -101,7 +106,7 @@ Further attacks against the application
 
 In severe cases, attackers may gain administrative access to the system.
 
-6. Remediation
+## 6. Remediation
 
 The following security measures should be implemented:
 
@@ -135,7 +140,7 @@ protected directories
 
 restricted access environments
 
-7. Vulnerability Classification
+## 7. Vulnerability Classification
 
 CWE:
 
@@ -145,7 +150,7 @@ OWASP Top 10:
 
 A05:2021 – Security Misconfiguration
 
-8. References
+## 8. References
 
 Code-Projects – Simple Food Ordering System
 https://code-projects.org/simple-food-order-system-in-php-with-source-code/
