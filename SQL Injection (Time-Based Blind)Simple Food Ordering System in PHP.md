@@ -1,16 +1,20 @@
 Vulnerability Report
 
-Title: Time-Based Blind SQL Injection in status Parameter of all-tickets.php
-Product: Simple Food Ordering System in PHP
-Vendor: Code-Projects
-Vendor URL: https://code-projects.org/simple-food-order-system-in-php-with-source-code/
+## Title: 
+Time-Based Blind SQL Injection in status Parameter of all-tickets.php
+## Product: 
+Simple Food Ordering System in PHP
+## Vendor: 
+Code-Projects
+## Vendor URL: 
+https://code-projects.org/simple-food-order-system-in-php-with-source-code/
 
-Affected Version: 1.0
+## Affected Version: 1.0
 Vulnerability Type: SQL Injection (Time-Based Blind)
 CWE: CWE-89 – Improper Neutralization of Special Elements used in an SQL Command
 Severity: High
 
-Description
+## Description
 A Time-Based Blind SQL Injection vulnerability exists in the Simple Food Ordering System in PHP 1.0 due to insufficient input validation in the status parameter of the all-tickets.php endpoint.
 
 The application fails to properly sanitize user-supplied input before incorporating it into SQL queries. Because of this, an attacker can inject malicious SQL statements into the status parameter. By using time-delay functions such as SLEEP(), attackers can confirm the presence of SQL injection and interact with the database in a blind manner.
@@ -19,14 +23,14 @@ When a specially crafted payload is submitted to the vulnerable parameter, the b
 
 An attacker may leverage this vulnerability to enumerate database structure, extract sensitive information, bypass authentication mechanisms, or manipulate database records.
 
-Affected Endpoint
+## Affected Endpoint
 /food/all-tickets.php
 
-Vulnerable parameter:
+## Vulnerable parameter:
 
 status
-Proof of Concept
-
+## Proof of Concept
+```plain
 The vulnerability can be triggered using the following HTTP request:
 
 GET /food/all-tickets.php?status=orwa(select(0)from(select(sleep(15)))v)%2f%2a'%2B(select(0)from(select(sleep(15)))v)%2B'%22%2B(select(0)from(select(sleep(15)))v)%2B%22%2a%2f HTTP/1.1
@@ -45,9 +49,9 @@ Sec-Fetch-Dest: document
 Accept-Encoding: gzip, deflate, br
 Cookie: PHPSESSID=d09ljmgtflh1l4dagc0opvshgr
 Connection: keep-alive
+```
 
-
-Steps to Reproduce
+## Steps to Reproduce
 
 Deploy the Simple Food Ordering System application.
 
@@ -57,13 +61,13 @@ Send the crafted HTTP request containing the SQL injection payload to the status
 
 Observe the server response time.
 
-Result
+## Result
 
 The server response is delayed by approximately 15 seconds, confirming that the injected SLEEP(15) SQL command is executed by the database server.
 
 This confirms the presence of a time-based blind SQL injection vulnerability.
 
-Impact
+## Impact
 
 Successful exploitation may allow attackers to:
 
@@ -81,7 +85,7 @@ Potentially gain administrative access to the application
 
 In severe cases, attackers could fully compromise the application database.
 
-Remediation
+## Remediation
 
 Developers should implement the following security measures:
 
@@ -115,7 +119,7 @@ OWASP Top 10:
 
 A03:2021 – Injection
 
-References
+## References
 
 OWASP SQL Injection
 https://owasp.org/www-community/attacks/SQL_Injection
