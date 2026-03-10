@@ -55,21 +55,27 @@ costumer_name
 
 
 ## Root Cause 
-	1.	Lack of Input Validation
-	•	The application does not sanitize or validate costumer_name input. Malicious HTML/JS can be inserted:
+``	
+	Lack of Input Validation
+	The application does not sanitize or validate costumer_name input. Malicious HTML/JS can be inserted:
+	
  ```plain
  <details/open ontoggle=prompt(origin)>
  ```
 2.	Direct Database Storage
 	•	Input is stored in the backend database without filtering dangerous content.
 	•	Stored XSS occurs because the payload persists.
+
 	3.	No Output Encoding
 	•	Data is output directly using echo or equivalent.
 	•	Browser renders attacker-controlled HTML/JS.
-	4.	No Content Security Policy or Cookie Protections
+
+
+	5.	No Content Security Policy or Cookie Protections
 	•	Missing CSP headers and HttpOnly/Secure cookie flags.
 	•	Increases impact of session hijacking.
-	5.	Attack Flow
+
+	6.	Attack Flow
 	•	Attacker submits payload → stored in DB → executed in victim’s browser when record is viewed.
 
 Technical Factors:
