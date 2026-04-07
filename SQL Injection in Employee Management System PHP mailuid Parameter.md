@@ -1,7 +1,7 @@
 ## SQL Injection in Employee Management System PHP mailuid Parameter
 ## Credit
 
-Discovered by: Ahmad Marzook
+Discovered by: Ahmad Marzouk
 
 ## Product
 
