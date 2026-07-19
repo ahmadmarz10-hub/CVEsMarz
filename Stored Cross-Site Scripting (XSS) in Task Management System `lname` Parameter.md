@@ -2,7 +2,7 @@
 
 ## Credit
 
-**Discovered by:** Ahmad Marzook
+**Discovered by:** Ahmad Marzouk
 
 ---
 
